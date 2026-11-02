@@ -1,0 +1,23 @@
+{
+  "name": "y",
+  "version": "1.0.0",
+  "description": "aqs-ja-cypress",
+  "homepage": "https://github.com/VladimirRadanov/aqa-js-cypress#readme",
+  "bugs": {
+    "url": "https://github.com/VladimirRadanov/aqa-js-cypress/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VladimirRadanov/aqa-js-cypress.git"
+  },
+  "license": "ISC",
+  "author": "Volodymyr Radanov",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "cypress": "^16.2.1"
+  }
+}
