@@ -18,12 +18,12 @@ function randomizeEmail() {
   return `user${Date.now() + Math.floor(Math.random() * 1000)}@example.com`;
 }
 
-function enterField(selector, value) {
+function enterField(selector, value, options = {}) {
   const trimmedValue = value.trim();
 
   cy.get(selector).clear();
   if (trimmedValue) {
-    cy.get(selector).type(trimmedValue);
+    cy.get(selector).type(trimmedValue, options);
   }
   cy.get(selector).blur();
 }
@@ -141,7 +141,7 @@ describe("Cypress Actions", () => {
 
   context("Registration password validation", () => {
     it("shows a policy error for a password that does not meet the requirements", () => {
-      enterField("#signupPassword", "password");
+      enterField("#signupPassword", "password", { sensitive: true });
       cy.get("div.invalid-feedback p").should(
         "contain.text",
         "Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter",
@@ -157,7 +157,7 @@ describe("Cypress Actions", () => {
     });
 
     it("shows a red border when the password is invalid", () => {
-      enterField("#signupPassword", "password");
+      enterField("#signupPassword", "password", { sensitive: true });
 
       cy.get("#signupPassword").should(
         "have.css",
@@ -169,8 +169,8 @@ describe("Cypress Actions", () => {
 
   context("Registration re-enter password validation", () => {
     it("shows an error when the passwords do not match", () => {
-      enterField("#signupPassword", "Password1");
-      enterField("#signupRepeatPassword", "Password2");
+      enterField("#signupPassword", "Password1", { sensitive: true });
+      enterField("#signupRepeatPassword", "Password2", { sensitive: true });
 
       cy.get("div.invalid-feedback p").should(
         "contain.text",
@@ -187,8 +187,8 @@ describe("Cypress Actions", () => {
     });
 
     it("shows a red border when the passwords do not match", () => {
-      enterField("#signupPassword", "Password1");
-      enterField("#signupRepeatPassword", "Password2");
+      enterField("#signupPassword", "Password1", { sensitive: true });
+      enterField("#signupRepeatPassword", "Password2", { sensitive: true });
 
       cy.get("#signupRepeatPassword").should(
         "have.css",
@@ -205,8 +205,8 @@ describe("Cypress Actions", () => {
       enterField("#signupName", "John");
       enterField("#signupLastName", "Doe");
       enterField("#signupEmail", "invalid-email");
-      enterField("#signupPassword", "Password1");
-      enterField("#signupRepeatPassword", "Password1");
+      enterField("#signupPassword", "Password1", { sensitive: true });
+      enterField("#signupRepeatPassword", "Password1", { sensitive: true });
 
       cy.contains("button", "Register").should("be.disabled");
     });
@@ -215,10 +215,18 @@ describe("Cypress Actions", () => {
       enterField("#signupName", "John");
       enterField("#signupLastName", "Doe");
       enterField("#signupEmail", randomizeEmail());
-      enterField("#signupPassword", "Password1");
-      enterField("#signupRepeatPassword", "Password1");
+      enterField("#signupPassword", "Password1", { sensitive: true });
+      enterField("#signupRepeatPassword", "Password1", { sensitive: true });
 
       cy.contains("button", "Register").should("be.enabled").click();
+      cy.location("pathname").should("include", "/panel/garage");
+    });
+  });
+
+  context("UI login with a registered account", () => {
+    it("logs in using the custom login command", () => {
+      cy.login();
+
       cy.location("pathname").should("include", "/panel/garage");
     });
   });
